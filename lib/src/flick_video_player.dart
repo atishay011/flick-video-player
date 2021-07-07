@@ -7,6 +7,7 @@ class FlickVideoPlayer extends StatefulWidget {
   const FlickVideoPlayer({
     Key? key,
     required this.flickManager,
+    required this.onFullScreen,
     this.flickVideoWithControls = const FlickVideoWithControls(
       controls: const FlickPortraitControls(),
     ),
@@ -24,6 +25,9 @@ class FlickVideoPlayer extends StatefulWidget {
     this.wakelockEnabled = true,
     this.wakelockEnabledFullscreen = true,
   }) : super(key: key);
+
+  /// Function triggered when user clicks on enter full screen
+  final Function() onFullScreen;
 
   final FlickManager flickManager;
 
@@ -110,15 +114,16 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
     _isFullscreen = true;
     _setPreferredOrientation();
     _setSystemUIOverlays();
-    _overlayEntry = OverlayEntry(builder: (context) {
-      return Scaffold(
-        body: FlickManagerBuilder(
-          flickManager: flickManager,
-          child: widget.flickVideoWithControlsFullscreen ??
-              widget.flickVideoWithControls,
-        ),
-      );
-    });
+    widget.onFullScreen();
+    // _overlayEntry = OverlayEntry(builder: (context) {
+    //   return Scaffold(
+    //     body: FlickManagerBuilder(
+    //       flickManager: flickManager,
+    //       child: widget.flickVideoWithControlsFullscreen ??
+    //           widget.flickVideoWithControls,
+    //     ),
+    //   );
+    // });
 
     Overlay.of(context)!.insert(_overlayEntry!);
   }
@@ -173,3 +178,4 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
     );
   }
 }
+
